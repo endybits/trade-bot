@@ -5,7 +5,7 @@ __pycache__/
 
 # Custom API
 config.json
-
+env_var.sh
 
 # C extensions
 *.so

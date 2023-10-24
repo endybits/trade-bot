@@ -16,3 +16,6 @@ def get_openai_apikey():
 
 def get_db_credentials():
     return CONFIG_VALUES.get('db')
+
+def get_gh_token():
+    return CONFIG_VALUES.get('gh-pat')

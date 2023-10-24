@@ -41,23 +41,28 @@ query3 = f"""SELECT COUNT(id)
 FROM users"""
 # query = "SELECT id FROM users WHERE id < 1000"
 
-## Connect to MariaDB
-try:
-    conn = mariadb.connect(
-        user=USER,
-        password=PASSWORD,
-        host=HOST,
-        database=DATABASE
-    )
-except mariadb.Error as e:
-    print(f"Error connecting to MariaDB Platform: {e}")
-    sys.exit(1)
+def db_querier(query: str):
+    # Find a good sql validator
 
-## Get cursor
-cursor = conn.cursor()
-cursor.execute(query2)
+    ## Connect to MariaDB
+    try:
+        conn = mariadb.connect(
+            user=USER,
+            password=PASSWORD,
+            host=HOST,
+            database=DATABASE
+        )
+    except mariadb.Error as e:
+        print(f"Error connecting to MariaDB Platform: {e}")
+        sys.exit(1)
 
-for row in cursor:
-    print(row)
+    ## Get cursor
+    cursor = conn.cursor()
+    cursor.execute(query)
 
-cursor.close()
+    db_response_list = []
+    for row in cursor:
+        db_response_list.append(row)
+        print(row)
+    cursor.close()
+    return db_response_list

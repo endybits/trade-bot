@@ -5,7 +5,8 @@ import os
 # sys.path.append(path_root)
 # print(sys.path)
 
-os.environ["PYTHONPATH"] = "."
+from app.config.fconfig import get_gh_token
+os.environ["GH_TOKEN"] = get_gh_token()
 
 from app.config.fconfig import get_openai_apikey as API_KEY
 

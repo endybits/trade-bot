@@ -1,0 +1,52 @@
+def get_target_table_description():
+    return """
+id: Unique row identifier;
+user_id: User's identifier for filtering purposes;
+trade_history_id: Identifier for a user's transaction;
+trade_id: Trade composed of one or more trade_history_id;
+symbol: Symbol of the asset purchased by the user (e.g., AAPL for Apple shares);
+open_date: Trade opening date;
+open_datetime: Trade opening date and time;
+close_date: Trade closing date;
+close_datetime: Trade closing date and time;
+transaction_date: Date of the transaction within a trade (a trade may have multiple transactions);
+transaction_datetime: Date and time of the transaction;
+return_percent_on_trade: Percentage return on the trade;
+gross_total_return_on_trade: Total profit or loss on the trade;
+gross_partial_return_on_transaction: Profit or loss on a specific transaction;
+net_partial_return_on_transaction: Net profit or loss on a specific transaction after fees;
+r_multiple: Another way to measure profit or loss;
+best_exit_eff: Best exit efficiency;
+best_exit_pnl: Best exit profit or loss;
+avg_entry_price: Average entry price;
+avg_exit_price: Average exit price;
+position_mae: Maximum adverse excursion (MAE) for the position;
+position_mfe: Maximum favorable excursion (MFE) for the position;
+price_mae: Price at maximum adverse excursion (MAE);
+price_mfe: Price at maximum favorable excursion (MFE);
+return_expectancy: Expected return on the trade;
+commission: Total trade commissions paid;
+fees: Total trade fees paid;
+broker_id: Broker or bank through which the trade was executed;
+is_long_short: Indicates if the trade was long (betting on price increase);
+is_win_loss_be: Indicates if the trade was a win, loss, break-even, or open;
+portfolio_id: Identifier for the portfolio or account to which the trade belongs;
+portfolio_value: Portfolio value;
+asset_id: Asset identifier;
+change_percent: Percentage change;
+volume_change: Volume change;
+marketcap: Market capitalization;
+hold_time: Duration the trade was held;
+call_put: Call or put option;
+spread_id: Spread identifier;
+strike: Strike price;
+expire_date: Expiration date;
+Price: Price;
+price_entry: Entry price;
+price_exit: Exit price;
+size_on_trade: Size of the trade;
+swap: Swap value;
+return_r_gross: Gross return rate;
+return_r_net: Net return rate;
+gross_partial_return_percent_on_transaction: Percentage profit or loss on a specific transaction.
+        """

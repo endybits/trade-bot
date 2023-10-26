@@ -5,7 +5,7 @@ from fastapi import status
 from fastapi import Body
 
 
-from app.utils.langchain_labs import transform2SQL
+from app.utils.langchain_labs import transform2SQL, generateResponse
 from app.utils.db_tests import db_querier
 
 # Schema
@@ -19,7 +19,7 @@ class UserQuery(BaseModel):
     question: str = Field(
         ...,
         min_length=8,
-        example="most successful tags with highest pnl on tuesdays between 9 and 10 am"
+        example="which hour of the day is best to trade on tuesday in 2023? also show pnl grouped by other hours of the day"
     )
 
 
@@ -46,11 +46,22 @@ def tradeInterpreterAI(
         question=user_query.question
         )
 
+    print(sql_command)
     # exec query agaist bd table
     db_response_list = db_querier(sql_command)
+    db_response_list_to_str = '\n'.join([''.join(str(col)) for col in db_response_list])
+    print(db_response_list_to_str)
+
 
     # 1. data to image 2. Data to natural language
+    
     # elaborate response
+    generateResponse(
+        query=sql_command,
+        question=user_query.question,
+        db_response=db_response_list_to_str
+        )
+
     return {
         'user_query': user_query,
         'SQL': sql_command,

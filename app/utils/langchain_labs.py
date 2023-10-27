@@ -1,4 +1,5 @@
 import os
+import ast
 from typing import Any
 
 from app.config.fconfig import get_openai_apikey as API_KEY
@@ -22,8 +23,11 @@ model_chat = ChatOpenAI()
 class SQLCommandOutputParser(BaseOutputParser):
     """Parse the output to SQL Query notation"""
     def parse(self, text: str) -> Any:
-        global SQL_QUERY
-        SQL_QUERY = text
+        global QUERY_DICT
+        QUERY_DICT = ast.literal_eval(text)
+        
+        print(type(QUERY_DICT))
+        print(QUERY_DICT)
         return super().parse(text)
 
 
@@ -37,6 +41,12 @@ base_template = f"""You are a SQL expert assistant who generates SQL Query comma
                     to query against the table {TARGET_TABLE} in a MariaDB database.
                     Use this fields description of the table, for a more accurate results: {target_table_description_fields}
                     ONLY return a SQL Query, and nothing more."""
+
+base_template = f"""You are a SQL expert assistant who generates SQL Query commands based on text.
+                    A user will pass in a question and you should convert it in a SQL command 
+                    to query against the table {TARGET_TABLE} in a MariaDB database.
+                    Use this fields description of the table, for a more accurate results: {target_table_description_fields}
+                    ONLY Python Dict with this structure: "sql_query: SELECT..., column_list: [field1, field2, ...]"."""
 
 base_template.format(target_table_description_fields=target_table_description_fields, TARGET_TABLE=TARGET_TABLE)
 human_template = "{text}"
@@ -54,6 +64,8 @@ def transform2SQL(user_id, question: str):
     chain.invoke({"text": f"I am the user_id {user_id}. {question}"})
 
     try:
+        
+        SQL_QUERY = QUERY_DICT['sql_query']
         query_validated = sqlvalidator.parse(SQL_QUERY) # Only validate SELECT (no clauses like WHERE) Find a better way ASAP.
         if not query_validated.is_valid():
             raise ValueError("Query Error", query_validated.errors)

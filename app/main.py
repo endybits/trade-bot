@@ -14,7 +14,7 @@ class UserQuery(BaseModel):
         ...,
         min_length=1,
         max_length=20,
-        example="3"
+        example="4359"
     )
     question: str = Field(
         ...,

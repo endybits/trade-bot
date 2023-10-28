@@ -25,7 +25,6 @@ class SQLCommandOutputParser(BaseOutputParser):
     def parse(self, text: str) -> Any:
         global QUERY_DICT
         QUERY_DICT = ast.literal_eval(text)
-        
         print(type(QUERY_DICT))
         print(QUERY_DICT)
         return super().parse(text)

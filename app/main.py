@@ -5,7 +5,7 @@ from fastapi import status
 from fastapi import Body
 
 
-from app.utils.langchain_labs import transform2SQL, generateResponse
+from app.utils.langchain_labs import transform2SQL, data2Text_model
 from app.utils.db_tests import db_querier
 
 # Schema
@@ -56,10 +56,10 @@ def tradeInterpreterAI(
     # 1. data to image 2. Data to natural language
     
     # elaborate response
-    generateResponse(
+    data2Text_model(
         query=sql_command,
         question=user_query.question,
-        db_response=db_response_list_to_str
+        db_data_response=db_response_list_to_str
         )
 
     return {

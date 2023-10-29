@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 
 # Custom API
+data_plots/
 config.json
 env_var.sh
 

@@ -49,4 +49,4 @@ swap: Swap value;
 return_r_gross: Gross return rate;
 return_r_net: Net return rate;
 gross_partial_return_percent_on_transaction: Percentage profit or loss on a specific transaction.
-        """
+"""

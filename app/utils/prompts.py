@@ -17,7 +17,7 @@ def data_to_natural_language(db_query: str, data: str, user_question):
 
 
 ## FEW SHOT TEMPLATE TO PLOT CHART
-def few_shot_code_to_chart_template():
+def few_shot_code_to_chart_template(user_question: str, sql_query: str, db_data: str):
 
     #### Possible constraints to include later ####
     # Define a recommended chart type between bart and line.
@@ -410,29 +410,16 @@ print(f"Plot saved to: {file_path}")
 """
 
 
-    new_case = """
+    new_case = f"""
 >>> Data and context:
 You are a seasoned Data Analist, with a wide experience in data visualization.
 Your task is Based on a given input, create a Python code to generate a visualization. 
 Use mathplotlib and pandas if it is required. 
 Please do not include nothing more in your answer. Only return the python code.
 
-Based on the question: 'which hour of the day is best to trade on tuesday in 2023? also show pnl grouped by other hours of the day'
-there was created this SQL Query: 'SELECT HOUR(open_datetime) AS hour_of_day, SUM(gross_total_return_on_trade) AS pnl
-FROM trade_history_agg
-WHERE user_id = 3
-AND DAYOFWEEK(open_datetime) = 3
-AND YEAR(open_datetime) = 2023
-GROUP BY hour_of_day
-ORDER BY pnl DESC;
-'
-Then I got as resulting data record: ' (10, 8270.5)
-(12, 1193.5)
-(11, 1028.0)
-(15, 960.0)
-(0, 0.0)
-(2, -1643.0)
-'
+Based on the question: {user_question}
+there was created this SQL Query: {sql_query}
+Then I got as resulting data record: {db_data}
 
 Recommend me a graph that can be used to best represent the question, the sql generated, and the resulting data.
 Keep in mind the following conditions:
@@ -445,14 +432,14 @@ Put Hue class in a "hue_variable"
 Put numerical values for x and y, and categorical value in hue.
 Give an appropriate title. Put the title in a "title" variable.
 This is your resultant dict structure
-{
+{{
     "chart_type": "",
     "x_variable": "",
     "y_variable": "",
     "hue_variable": "",
     "title": ""
-}
+}}
 
 >>> Your output:
 """
-    return shot_1 + shot_4 + shot_5 + new_case
+    return shot_1 + shot_4 + new_case

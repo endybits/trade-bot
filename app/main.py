@@ -7,6 +7,7 @@ from fastapi import Body
 
 from app.utils.langchain_labs import transform2SQL, data2Text_model
 from app.utils.db_tests import db_querier
+from app.utils.chart_gpt import make_chart
 
 # Schema
 class UserQuery(BaseModel):
@@ -49,8 +50,8 @@ def tradeInterpreterAI(
     print(sql_command)
     # exec query agaist bd table
     db_response_list = db_querier(sql_command)
-    db_response_list_to_str = '\n'.join([''.join(str(col)) for col in db_response_list])
-    print(db_response_list_to_str)
+    data_str = '\n'.join([''.join(str(col)) for col in db_response_list])
+    print(data_str)
 
 
     # 1. data to image 2. Data to natural language
@@ -59,8 +60,14 @@ def tradeInterpreterAI(
     data2Text_model(
         query=sql_command,
         question=user_query.question,
-        db_data_response=db_response_list_to_str
+        db_data_response=data_str
         )
+
+    make_chart(
+        user_question=user_query.question,
+        sql_query=sql_command,
+        db_data=data_str
+    )
 
     return {
         'user_query': user_query,

@@ -22,10 +22,14 @@ def create_chart_base_code( prompt: str):
     return python_code_str
 
 ## TODO Dynamical data
-def make_chart():
-    few_shot_template = few_shot_code_to_chart_template()
+def make_chart(user_question: str, sql_query: str, db_data: str):
+    few_shot_template = few_shot_code_to_chart_template(
+                            user_question,
+                            sql_query,
+                            db_data
+                        )
     python_code = create_chart_base_code(few_shot_template)
     print(python_code)
     exec(python_code)
 
-make_chart()
+#make_chart()

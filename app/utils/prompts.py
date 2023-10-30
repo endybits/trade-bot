@@ -22,12 +22,34 @@ def few_shot_code_to_chart_template(user_question: str, sql_query: str, db_data:
     #### Possible constraints to include later ####
     # Define a recommended chart type between bart and line.
     # If there are too many columns or fields in the provided resulting data select those that best represent a visual answer for the user
-    shot_1 = """
->>> Data and context:
+    base_context = """ >>> Context:
 You are a seasoned Data Analist, with a wide experience in data visualization.
 Your task is Based on a given input, create a Python code to generate a visualization. 
 Use mathplotlib and pandas if it is required. 
 Please do not include nothing more in your answer. Only return the python code.
+
+Keep in mind the following conditions:
+Decide the chart type that best represents the question, the sql generated, and the resulting data.
+If total records is 1 and sql query has 1 only column, use a metric plot and x variable.
+Bar chart, line chart, scatter plot must be the preferred hue.
+Choose the best x and y variables for the plot, based on the question and sql query provided.
+Put the chosen x in a "x_variable" and  y in a "y_variable"
+Put Hue class in a "hue_variable"
+Put numerical values for x and y, and categorical value in hue.
+Give an appropriate title. Put the title in a "title"
+This is your resultant dict template:
+{
+    "chart_type": "",
+    "x_variable": "",
+    "y_variable": "",
+    "hue_variable": "",
+    "title": ""
+}
+Remember, you must only return the python code to visualize the chart.
+"""
+
+    shot_1 = """
+>>> Data and context:
 Based on the question: 'Given that I expect the medical charge to be around 100 to 10000 in the southwest region, what is the outlier of the charges in the southwest region'
 there was created this SQL Query: 
     'SELECT charges, region
@@ -40,25 +62,7 @@ Then I got as resulting data record: '
     (11000.0, Southwest)
     (10100.0, Southwest)
 '
-Recommend me a graph that can be used to best represent the question, the sql generated, and the resulting data.
-Keep in mind the following conditions:
-If total records is 1 and sql query has 1 only column, use a metric plot and x variable.
-Bar chart, line chart, scatter plot must be the preferred hue.
 
-Choose the best x and y variables for the plot, based on the question and sql query provided.
-Put the chosen x in a "x_variable" and  y in a "y_variable"
-Put Hue class in a "hue_variable"
-Put numerical values for x and y, and categorical value in hue.
-Give an appropriate title. Put the title in a "title"
-This is your resultant dict
-{
-    "chart_type": "box plot",
-    "x_variable": "region",
-    "y_variable": "charges",
-    "hue_variable": "None",
-    "title": "Outliers of Medical Charges in the Southwest Region"
-}
-Now you can use all this context and data to code.
 >>> Code:
 import os
 import tempfile
@@ -95,10 +99,6 @@ print(f"Plot saved to: {file_path}")
 
     shot_2 = """
 >>> Data and context:
-You are a seasoned Data Analist, with a wide experience in data visualization.
-Your task is Based on a given input, create a Python code to generate a visualization. 
-Use mathplotlib and pandas if it is required. 
-Please do not include nothing more in your answer. Only return the python code.
 Based on the question: 'What is the distribution of age and sex of people in southeast region'
 there was generated this SQL Query: 
     'SELECT age, sex, COUNT(*) as count
@@ -114,24 +114,6 @@ Then I got as resulting data record: '
 (45, Male, 80)
 (50, Female, 75)
 '
-Recommend me a graph that can be used to best represent the question, the sql generated, and the resulting data.
-Keep in mind the following conditions:
-If total records is 1 and sql query has 1 only column, use a metric plot and x variable.
-Bar chart, line chart, scatter plot must be the preferred hue.
-
-Choose the best x and y variables for the plot, based on the question and sql query provided.
-Put the chosen x in a "x_variable" and  y in a "y_variable"
-Put Hue class in a "hue_variable"
-Put numerical values for x and y, and categorical value in hue.
-Give an appropriate title. Put the title in a "title"
-This is your resultant dict
-{
-    "chart_type": "Bar Chart",
-    "x_variable": "Age Group",
-    "y_variable": "Count",
-    "hue_variable": "Sex",
-    "title": "Distribution of Age and Sex in the Southeast Region"
-}
 
 
 >>> Code:
@@ -172,11 +154,6 @@ print(f"Plot saved to: {file_path}")
 
     shot_3 = """
 >>> Data and context:
-You are a seasoned Data Analist, with a wide experience in data visualization.
-Your task is Based on a given input, create a Python code to generate a visualization. 
-Use mathplotlib and pandas if it is required. 
-Please do not include nothing more in your answer. Only return the python code.
-
 Based on the question: 'What is the distribution of monthly sales revenue by product category in the year 2023?'
 there was generated this SQL Query: 
     'SELECT category, EXTRACT(MONTH FROM order_date) AS month, SUM(revenue) AS total_revenue
@@ -196,25 +173,6 @@ Then I got as resulting data record: '
 (Books, 2, 4500)
 (Books, 3, 5200)
 '
-Recommend me a graph that can be used to best represent the question, the sql generated, and the resulting data.
-Keep in mind the following conditions:
-If total records is 1 and sql query has 1 only column, use a metric plot and x variable.
-Bar chart, line chart, scatter plot must be the preferred hue.
-
-Choose the best x and y variables for the plot, based on the question and sql query provided.
-Put the chosen x in a "x_variable" and  y in a "y_variable"
-Put Hue class in a "hue_variable"
-Put numerical values for x and y, and categorical value in hue.
-Give an appropriate title. Put the title in a "title" variable.
-This is your resultant dict
-{
-    "chart_type": "Line Chart",
-    "x_variable": "Month",
-    "y_variable": "Total Revenue (USD)",
-    "hue_variable": "Product Category",
-    "title": "Monthly Sales Revenue by Product Category in 2023"
-}
-
 
 >>> Code:
 import os
@@ -260,11 +218,6 @@ print(f"Plot saved to: {file_path}")
 
     shot_4 = """
 >>> Data and context:
-You are a seasoned Data Analist, with a wide experience in data visualization.
-Your task is Based on a given input, create a Python code to generate a visualization. 
-Use mathplotlib and pandas if it is required. 
-Please do not include nothing more in your answer. Only return the python code.
-
 Based on the question: 'What is the distribution of daily trading volume by stock symbol in the last quarter of 2023'
 there was generated this SQL Query: 
     'SELECT symbol, DATE_TRUNC('day', trade_date) AS day, SUM(volume) AS total_volume
@@ -284,24 +237,6 @@ Then I got as resulting data record: '
 (GOOGL, 2023-10-02, 4500)
 (GOOGL, 2023-10-03, 5200)
 '
-Recommend me a graph that can be used to best represent the question, the sql generated, and the resulting data.
-Keep in mind the following conditions:
-If total records is 1 and sql query has 1 only column, use a metric plot and x variable.
-Bar chart, line chart, scatter plot must be the preferred hue.
-
-Choose the best x and y variables for the plot, based on the question and sql query provided.
-Put the chosen x in a "x_variable" and  y in a "y_variable"
-Put Hue class in a "hue_variable"
-Put numerical values for x and y, and categorical value in hue.
-Give an appropriate title. Put the title in a "title" variable.
-This is your resultant dict
-{
-    "chart_type": "Area Chart",
-    "x_variable": "Day",
-    "y_variable": "Total Trading Volume",
-    "hue_variable": "Stock Symbol",
-    "title": "Daily Trading Volume by Stock Symbol (Q4 2023)"
-}
 
 >>> Your output:
 import os
@@ -347,11 +282,6 @@ print(f"Plot saved to: {file_path}")
 
     shot_5 = """
 >>> Data and context:
-You are a seasoned Data Analist, with a wide experience in data visualization.
-Your task is Based on a given input, create a Python code to generate a visualization. 
-Use mathplotlib and pandas if it is required. 
-Please do not include nothing more in your answer. Only return the python code.
-
 Based on the question: 'What is the average daily return of AAPL in the year 2023'
 there was generated this SQL Query: 
     'SELECT AVG(daily_return) AS average_return
@@ -362,24 +292,6 @@ there was generated this SQL Query:
 Then I got as resulting data record: ' 
 (0.0023,)
 '
-Recommend me a graph that can be used to best represent the question, the sql generated, and the resulting data.
-Keep in mind the following conditions:
-If total records is 1 and sql query has 1 only column, use a metric plot and x variable.
-Bar chart, line chart, scatter plot must be the preferred hue.
-
-Choose the best x and y variables for the plot, based on the question and sql query provided.
-Put the chosen x in a "x_variable" and  y in a "y_variable"
-Put Hue class in a "hue_variable"
-Put numerical values for x and y, and categorical value in hue.
-Give an appropriate title. Put the title in a "title" variable.
-This is your resultant dict
-{
-    "chart_type": "Metric Plot",
-    "x_variable": "None",
-    "y_variable": "Average Daily Return (2023)",
-    "hue_variable": "None",
-    "title": "Average Daily Return for AAPL in 2023"
-}
 
 >>> Code:
 import os
@@ -430,16 +342,9 @@ Choose the best x and y variables for the plot, based on the question and sql qu
 Put the chosen x in a "x_variable" and  y in a "y_variable"
 Put Hue class in a "hue_variable"
 Put numerical values for x and y, and categorical value in hue.
-Give an appropriate title. Put the title in a "title" variable.
+Give an appropriate title and Put it in a "title" variable.
 This is your resultant dict structure
-{{
-    "chart_type": "",
-    "x_variable": "",
-    "y_variable": "",
-    "hue_variable": "",
-    "title": ""
-}}
 
 >>> Your output:
 """
-    return shot_1 + shot_4 + new_case
+    return base_context + shot_1 + shot_4 + shot_5 + new_case

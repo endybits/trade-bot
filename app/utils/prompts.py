@@ -12,16 +12,13 @@ def data_to_natural_language(db_query: str, data: str, user_question):
     return f"""You are a Trading expert assistant with a wide experience
             helping users to understand their historical data.
             Using this sql query {db_query} was generated this data {data}. 
-            Based on it, Your task is answer this question {user_question}.
+            Based on it, Your task is to answer this question {user_question}.
             Do not make information up, only write the answer and nothing more."""
 
 
 ## FEW SHOT TEMPLATE TO PLOT CHART
 def few_shot_code_to_chart_template(user_question: str, sql_query: str, db_data: str):
 
-    #### Possible constraints to include later ####
-    # Define a recommended chart type between bart and line.
-    # If there are too many columns or fields in the provided resulting data select those that best represent a visual answer for the user
     base_context = """ >>> Context:
 You are a seasoned Data Analist, with a wide experience in data visualization.
 Your task is Based on a given input, create a Python code to generate a visualization. 

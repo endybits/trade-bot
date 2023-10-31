@@ -49,4 +49,15 @@ swap: Swap value;
 return_r_gross: Gross return rate;
 return_r_net: Net return rate;
 gross_partial_return_percent_on_transaction: Percentage profit or loss on a specific transaction.
+partial_size_on_transaction: Size or quantity of the asset involved in a specific transaction within the trade;
+partial_commission_on_transaction: Commission paid for a specific transaction within the trade;
+partial_fees_on_transaction: Fees paid for a specific transaction within the trade;
+partial_swap_on_transaction: Swap value associated with a specific transaction within the trade;
+is_trade: Indicates whether the record represents a trade;
+created_at: Date and time when the record was created;
+symbol_id: Identifier for the asset symbol;
+is_open_win_loss_be: Indicates whether the trade is open, a win, a loss, or break-even;
+sector_id: Identifier for the sector to which the asset belongs;
+sector_name: Name of the sector to which the asset belongs;
+spread: A spread refers to the difference between the bid and ask prices for an asset, often associated with trading costs and market liquidity.
 """

@@ -19,3 +19,6 @@ def get_db_credentials():
 
 def get_gh_token():
     return CONFIG_VALUES.get('gh-pat')
+
+def get_aws_s3_info():
+    return CONFIG_VALUES.get('aws_s3_bucket')

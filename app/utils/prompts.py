@@ -17,36 +17,9 @@ def data_to_natural_language(db_query: str, data: str, user_question):
             Do not make information up, only write the answer and nothing more."""
 
 
-## FEW SHOT TEMPLATE TO PLOT CHART
-def few_shot_code_to_chart_template(user_question: str, sql_query: str, db_data: str):
 
-    base_context = """ >>> Context:
-You are a seasoned Data Analist, with a wide experience in data visualization.
-Your task is Based on a given input, create a Python code to generate a visualization. 
-Use mathplotlib and pandas if it is required. 
-Please do not include nothing more in your answer. Only return the python code.
-
-Keep in mind the following conditions:
-Decide the chart type that best represents the question, the sql generated, and the resulting data.
-If total records is 1 and sql query has 1 only column, use a metric plot and x variable.
-Bar chart, line chart, scatter plot must be the preferred hue.
-Choose the best x and y variables for the plot, based on the question and sql query provided.
-Put the chosen x in a "x_variable" and  y in a "y_variable"
-Put Hue class in a "hue_variable"
-Put numerical values for x and y, and categorical value in hue.
-Give an appropriate title. Put the title in a "title"
-This is your resultant dict template, use it as base for feed the python code:
-{
-    "chart_type": "",
-    "x_variable": "",
-    "y_variable": "",
-    "hue_variable": "",
-    "title": ""
-}
-Remember, you must only return the python code to visualize the chart.
-"""
-
-    shot_1 = """
+## SHOTS FOR FEW SHOT TEMPLATE TO PLOT CHART
+shot_1 = """
 >>> Data and context:
 Based on the question: 'Given that I expect the medical charge to be around 100 to 10000 in the southwest region, what is the outlier of the charges in the southwest region'
 there was created this SQL Query: 
@@ -95,7 +68,7 @@ print(f"Plot saved to: {file_path}")
 """
 
 
-    shot_2 = """
+shot_2 = """
 >>> Data and context:
 Based on the question: 'What is the distribution of age and sex of people in southeast region'
 there was generated this SQL Query: 
@@ -150,7 +123,7 @@ print(f"Plot saved to: {file_path}")
 """
 
 
-    shot_3 = """
+shot_3 = """
 >>> Data and context:
 Based on the question: 'What is the distribution of monthly sales revenue by product category in the year 2023?'
 there was generated this SQL Query: 
@@ -214,7 +187,7 @@ print(f"Plot saved to: {file_path}")
 """
 
 
-    shot_4 = """
+shot_4 = """
 >>> Data and context:
 Based on the question: 'What is the distribution of daily trading volume by stock symbol in the last quarter of 2023'
 there was generated this SQL Query: 
@@ -278,7 +251,7 @@ print(f"Plot saved to: {file_path}")
 """
 
 
-    shot_5 = """
+shot_5 = """
 >>> Data and context:
 Based on the question: 'What is the average daily return of AAPL in the year 2023'
 there was generated this SQL Query: 
@@ -319,6 +292,34 @@ plt.savefig(file_path)
 print(f"Plot saved to: {file_path}")
 """
 
+base_context = """ >>> Context:
+You are a seasoned Data Analist, with a wide experience in data visualization.
+Your task is Based on a given input, create a Python code to generate a visualization. 
+Use mathplotlib and pandas if it is required. 
+Please do not include nothing more in your answer. Only return the python code.
+
+Keep in mind the following conditions:
+Decide the chart type that best represents the question, the sql generated, and the resulting data.
+If total records is 1 and sql query has 1 only column, use a metric plot and x variable.
+Bar chart, line chart, scatter plot must be the preferred hue.
+Choose the best x and y variables for the plot, based on the question and sql query provided.
+Put the chosen x in a "x_variable" and  y in a "y_variable"
+Put Hue class in a "hue_variable"
+Put numerical values for x and y, and categorical value in hue.
+Give an appropriate title. Put the title in a "title"
+This is your resultant dict template, use it as base for feed the python code:
+{
+    "chart_type": "",
+    "x_variable": "",
+    "y_variable": "",
+    "hue_variable": "",
+    "title": ""
+}
+Remember, you must only return the python code to visualize the chart.
+"""
+
+## FEW SHOT TEMPLATE TO PLOT CHART
+def few_shot_code_to_chart_template(user_question: str, sql_query: str, db_data: str):
 
     new_case = f"""
 >>> Data and context:
@@ -346,3 +347,34 @@ This is your resultant dict structure
 >>> Your output:
 """
     return base_context + shot_1 + shot_4 + shot_5 + new_case
+
+
+## FEW SHOT TEMPLATE TO PLOT CHART
+def few_shot_code_to_chart_template_alternative(user_question: str, sql_query: str, db_data: str):
+
+    new_case = f"""
+>>> Data and context:
+You are a seasoned Data Analist, with a wide experience in data visualization.
+Your task is Based on a given input, create a Python code to generate a visualization. 
+Use mathplotlib and pandas if it is required. 
+Please do not include nothing more in your answer. Only return the python code.
+
+Based on the question: {user_question}
+there was created this SQL Query: {sql_query}
+Then I got as resulting data record: {db_data}
+
+Recommend me a graph that can be used to best represent the question, the sql generated, and the resulting data.
+Keep in mind the following conditions:
+If total records is 1 and sql query has 1 only column, use a metric plot and x variable.
+Bar chart, line chart, scatter plot must be the preferred hue.
+
+Choose the best x and y variables for the plot, based on the question and sql query provided.
+Put the chosen x in a "x_variable" and  y in a "y_variable"
+Put Hue class in a "hue_variable"
+Put numerical values for x and y, and categorical value in hue.
+Give an appropriate title and Put it in a "title" variable.
+This is your resultant dict structure
+
+>>> Your output:
+"""
+    return base_context + shot_4 + shot_5+ new_case

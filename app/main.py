@@ -115,7 +115,4 @@ async def get_custom_stream_answer():
         #"answer": iter_file()
     }
 
-
-    #return StreamingResponse(content=response)
     return StreamingResponse(content=iter_file(), media_type="application/json")
-    #return  response

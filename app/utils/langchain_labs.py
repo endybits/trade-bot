@@ -23,10 +23,12 @@ model_chat = ChatOpenAI()
 class SQLCommandOutputParser(BaseOutputParser):
     """Parse the output to SQL Query notation"""
     def parse(self, text: str) -> Any:
-        global QUERY_DICT
-        QUERY_DICT = ast.literal_eval(text)
-        print(type(QUERY_DICT))
-        print(QUERY_DICT)
+        global SQL_QUERY
+        print(text)
+        SQL_QUERY = text
+        #QUERY_DICT = ast.literal_eval(text)
+        print(type(SQL_QUERY))
+        print(SQL_QUERY)
         return super().parse(text)
 
 
@@ -56,7 +58,7 @@ def transform2SQL(user_id, question: str):
 
     try:
         
-        generated_sql = QUERY_DICT['sql_query']
+        generated_sql = SQL_QUERY
         
         # ************* TODO *************
         # Only validate SELECT (no clauses like WHERE) Find a better way ASAP.

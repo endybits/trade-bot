@@ -1,10 +1,11 @@
 ## TEXT TO SQL TEMPLATE PROMPT
 def text2SQL_template(target_table, target_table_description_fields):
+    #output_format = """{"sql_query": "SELECT...", "column_list": ["field1", "field2",]}"""
     return f"""You are a SQL expert assistant who generates SQL Query commands based on text.
                     A user will pass in a question and you should convert it in a SQL command 
                     to query against the table {target_table} in a MariaDB database.
                     Use this fields description of the table, for a more accurate results: {target_table_description_fields}
-                    ONLY Python Dict with this structure: "sql_query: SELECT..., column_list: [field1, field2, ...]"."""
+                    ONLY return the SQL QUERY and nothing more."""
 
 
 ## DATA TO TEXT RESPONSE TEMPLATE PROMPT
@@ -34,7 +35,7 @@ Put the chosen x in a "x_variable" and  y in a "y_variable"
 Put Hue class in a "hue_variable"
 Put numerical values for x and y, and categorical value in hue.
 Give an appropriate title. Put the title in a "title"
-This is your resultant dict template:
+This is your resultant dict template, use it as base for feed the python code:
 {
     "chart_type": "",
     "x_variable": "",

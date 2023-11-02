@@ -1,4 +1,5 @@
 import os
+
 # from pathlib import Path
 # import sys
 # path_root = Path(__file__).parents[1]
@@ -6,6 +7,7 @@ import os
 # print(sys.path)
 
 from app.config.fconfig import get_gh_token
+
 os.environ["GH_TOKEN"] = get_gh_token()
 
 from app.config.fconfig import get_openai_apikey as API_KEY

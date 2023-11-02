@@ -1,24 +1,29 @@
 import os
 import json
 
-path_file = 'app/config/config.json'
+path_file = "app/config/config.json"
+
 
 def get_config_values():
     if not os.path.exists(path_file):
-        raise FileNotFoundError(f'The config file {path_file} is missing.')    
-    return json.loads(open(path_file, 'r', encoding="UTF-8").read())
+        raise FileNotFoundError(f"The config file {path_file} is missing.")
+    return json.loads(open(path_file, "r", encoding="UTF-8").read())
+
 
 CONFIG_VALUES = get_config_values()
 
 
 def get_openai_apikey():
-    return CONFIG_VALUES.get('openai_api_key')
+    return CONFIG_VALUES.get("openai_api_key")
+
 
 def get_db_credentials():
-    return CONFIG_VALUES.get('db')
+    return CONFIG_VALUES.get("db")
+
 
 def get_gh_token():
-    return CONFIG_VALUES.get('gh-pat')
+    return CONFIG_VALUES.get("gh-pat")
+
 
 def get_aws_s3_info():
-    return CONFIG_VALUES.get('aws_s3_bucket')
+    return CONFIG_VALUES.get("aws_s3_bucket")

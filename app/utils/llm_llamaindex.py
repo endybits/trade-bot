@@ -1,12 +1,13 @@
 import os
-os.getenv('OPENAI_API_KEY')
+
+os.getenv("OPENAI_API_KEY")
 
 from sqlalchemy import create_engine, MetaData
 from llama_index import LLMPredictor, ServiceContext, SQLDatabase, VectorStoreIndex
 from llama_index.indices.struct_store import SQLTableRetrieverQueryEngine
 from llama_index.objects import SQLTableNodeMapping, ObjectIndex, SQLTableSchema
 
-from langchain.llms.openai import OpenAI 
+from langchain.llms.openai import OpenAI
 
 from db_utils import MARIADB_URI, TARGET_TABLE
 
@@ -43,14 +44,14 @@ service_context = ServiceContext.from_defaults(llm_predictor=llm_predictor)
 query_engine = SQLTableRetrieverQueryEngine(
     sql_database,
     obj_index.as_retriever(similarity_top_k=1),
-    service_context=service_context
+    service_context=service_context,
 )
 
 
 response = query_engine.query(f"How many rows there are in the table {TARGET_TABLE}?")
 
 print(response)
-print(10*'*')
-print(response.metadata['sql_query'])
-print(10*'*')
-print(response.metadata['result'])
+print(10 * "*")
+print(response.metadata["sql_query"])
+print(10 * "*")
+print(response.metadata["result"])

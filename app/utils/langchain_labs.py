@@ -1,8 +1,10 @@
 import os
-import ast
+
+# import ast
 from typing import Any
 
 from app.config.fconfig import get_openai_apikey as API_KEY
+
 os.environ["OPENAI_API_KEY"] = API_KEY()
 
 import sqlvalidator
@@ -22,11 +24,12 @@ model_chat = ChatOpenAI()
 
 class SQLCommandOutputParser(BaseOutputParser):
     """Parse the output to SQL Query notation"""
+
     def parse(self, text: str) -> Any:
         global SQL_QUERY
         print(text)
         SQL_QUERY = text
-        #QUERY_DICT = ast.literal_eval(text)
+        # QUERY_DICT = ast.literal_eval(text)
         print(type(SQL_QUERY))
         print(SQL_QUERY)
         return super().parse(text)
@@ -37,29 +40,29 @@ target_table_description_fields = get_target_table_description()
 
 base_template = text2SQL_template(
     target_table=TARGET_TABLE,
-    target_table_description_fields= target_table_description_fields
-    )
+    target_table_description_fields=target_table_description_fields,
+)
 
 human_template = "{text}"
 
 
 # Load chatprompt
-chat_prompt = ChatPromptTemplate.from_messages([
-    ('system', base_template),
-    ('human', human_template),
-])
+chat_prompt = ChatPromptTemplate.from_messages(
+    [
+        ("system", base_template),
+        ("human", human_template),
+    ]
+)
 
 
 # LLM text2SQL
 def transform2SQL(user_id, question: str):
-
     chain = chat_prompt | ChatOpenAI() | SQLCommandOutputParser()
     chain.invoke({"text": f"I am the user_id {user_id}. {question}"})
 
     try:
-        
         generated_sql = SQL_QUERY
-        
+
         # ************* TODO *************
         # Only validate SELECT (no clauses like WHERE) Find a better way ASAP.
         query_validated = sqlvalidator.parse(generated_sql)
@@ -77,9 +80,12 @@ def transform2SQL(user_id, question: str):
 
 llm = OpenAI()
 
+
 def data2Text_model(query: str, question: str, db_data_response: str):
-    ai_response = ''
-    data_to_text_template = data_to_natural_language(user_question=question, db_query=query, data=db_data_response)    
+    ai_response = ""
+    data_to_text_template = data_to_natural_language(
+        user_question=question, db_query=query, data=db_data_response
+    )
     print("INTO GENERATE RESPONSE")
     print(data_to_text_template)
     print("***")

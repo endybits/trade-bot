@@ -4,12 +4,12 @@ import mariadb
 from app.config.fconfig import get_db_credentials as DB
 
 db = DB()
-HOST = db.get('host')
-USER = db.get('user')
-PASSWORD = db.get('password')
-DATABASE = db.get('database')
-TARGET_TABLE = db.get('target_table')
-TEST_USER_ID = db.get('test_user_id')
+HOST = db.get("host")
+USER = db.get("user")
+PASSWORD = db.get("password")
+DATABASE = db.get("database")
+TARGET_TABLE = db.get("target_table")
+TEST_USER_ID = db.get("test_user_id")
 
 query = f"""SELECT 
     COUNT(*) AS total_trades,
@@ -59,16 +59,14 @@ WHERE {TARGET_TABLE}.user_id = {TEST_USER_ID}
 
 """
 
+
 def db_querier(query: str):
     # Find a good sql validator
 
     ## Connect to MariaDB
     try:
         conn = mariadb.connect(
-            user=USER,
-            password=PASSWORD,
-            host=HOST,
-            database=DATABASE
+            user=USER, password=PASSWORD, host=HOST, database=DATABASE
         )
     except mariadb.Error as e:
         print(f"Error connecting to MariaDB Platform: {e}")
@@ -85,4 +83,5 @@ def db_querier(query: str):
     cursor.close()
     return db_response_list
 
-#db_querier(query7)
+
+# db_querier(query7)

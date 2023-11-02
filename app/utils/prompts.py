@@ -1,6 +1,6 @@
 ## TEXT TO SQL TEMPLATE PROMPT
 def text2SQL_template(target_table, target_table_description_fields):
-    #output_format = """{"sql_query": "SELECT...", "column_list": ["field1", "field2",]}"""
+    # output_format = """{"sql_query": "SELECT...", "column_list": ["field1", "field2",]}"""
     return f"""You are a SQL expert assistant who generates SQL Query commands based on text.
                     A user will pass in a question and you should convert it in a SQL command 
                     to query against the table {target_table} in a MariaDB database.
@@ -15,7 +15,6 @@ def data_to_natural_language(db_query: str, data: str, user_question):
             Using this sql query {db_query} was generated this data {data}. 
             Based on it, Your task is to answer this question {user_question}.
             Do not make information up, only write the answer and nothing more."""
-
 
 
 ## SHOTS FOR FEW SHOT TEMPLATE TO PLOT CHART
@@ -339,9 +338,9 @@ This is your resultant dict template, use it as base for feed the python code:
 Remember, you must only return the python code to visualize the chart.
 """
 
+
 ## FEW SHOT TEMPLATE TO PLOT CHART
 def few_shot_code_to_chart_template(user_question: str, sql_query: str, db_data: str):
-
     new_case = f"""
 >>> Data and context:
 You are a seasoned Data Analist, with a wide experience in data visualization.
@@ -371,8 +370,9 @@ This is your resultant dict structure
 
 
 ## FEW SHOT TEMPLATE TO PLOT CHART
-def few_shot_code_to_chart_template_alternative(user_question: str, sql_query: str, db_data: str):
-
+def few_shot_code_to_chart_template_alternative(
+    user_question: str, sql_query: str, db_data: str
+):
     new_case = f"""
 >>> Data and context:
 You are a seasoned Data Analist, with a wide experience in data visualization.
@@ -398,4 +398,4 @@ This is your resultant dict structure
 
 >>> Your output:
 """
-    return base_context + shot_4 + shot_5+ new_case
+    return base_context + shot_4 + shot_5 + new_case

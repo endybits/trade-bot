@@ -46,6 +46,7 @@ def make_chart(user_question: str, sql_query: str, db_data: str):
             )
             return chart_url
     except InvalidRequestError as e:
+        print(f"Raised Error: {e.error}")
         print("CALLING ALTERNATIVE PROMPT TEMPLATE")
         few_shot_template = few_shot_code_to_chart_template_alternative(
             user_question, sql_query, db_data

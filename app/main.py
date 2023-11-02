@@ -1,10 +1,8 @@
-import asyncio
 from pydantic import BaseModel, Field
-
 from fastapi import FastAPI
 from fastapi import status
 from fastapi import Body
-from fastapi.responses import StreamingResponse, JSONResponse
+from fastapi.responses import JSONResponse
 
 from app.utils.langchain_labs import transform2SQL, data2Text_model
 from app.utils.db_tests import db_querier
@@ -58,44 +56,3 @@ def tradeInterpreterAI(user_query: UserQuery = Body(...)):
         "chart_url": chart_url,
     }
     return JSONResponse(response, media_type="application/json")
-
-
-from fastapi.responses import Response, StreamingResponse
-from typing import Any
-import json
-import orjson
-
-
-class CustomJsonResponse(Response):
-    media_type = "application/json"
-
-    def render(self, content: Any):
-        return orjson.dumps(content)
-
-
-IM_NAME = "plot_20231030_214453.png"
-IM_PATH = "/home/endyb/codev/trade-bot/data_plots/"
-
-
-@app.get("/stream-answer", response_class=CustomJsonResponse)
-async def get_custom_stream_answer():
-    async def iter_file():
-        await asyncio.sleep(2)
-        resp = "AI answering: "
-        for i in range(10000):
-            resp += f"{i}"
-            hi = {"user_idi": 123, "question": "This is a fake question", "value_i": i}
-            yield orjson.dumps(hi)
-
-    def text_background():
-        for i in range(100000):
-            # asyncio.sleep(2)
-            print(i)
-
-    response = {
-        "user_id": 123,
-        "question": "This is a fake question",
-        # "answer": iter_file()
-    }
-
-    return StreamingResponse(content=iter_file(), media_type="application/json")

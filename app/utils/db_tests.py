@@ -43,7 +43,7 @@ FROM {TARGET_TABLE}
 WHERE user_id = 4359
 GROUP BY portfolio_id"""
 query4 = f"""SHOW TABLES FROM {DATABASE}"""
-query5 = f"""DESCRIBE portfolio"""
+query5 = """DESCRIBE portfolio"""
 query6 = f"""SELECT COUNT(*) AS total_trades,
 SUM(CASE WHEN {TARGET_TABLE}.is_win_loss_be = 'win' THEN 1 ELSE 0 END) AS total_wins,
 (SUM(CASE WHEN {TARGET_TABLE}.is_win_loss_be = 'win' THEN 1 ELSE 0 END) / COUNT(*)) * 100 AS winning_percentage

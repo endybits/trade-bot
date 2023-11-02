@@ -1,4 +1,3 @@
-import os
 from app.config.fconfig import get_db_credentials
 
 db_credentials = get_db_credentials()

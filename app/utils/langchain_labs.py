@@ -2,22 +2,19 @@ import os
 
 # import ast
 from typing import Any
-
-from app.config.fconfig import get_openai_apikey as API_KEY
-
-os.environ["OPENAI_API_KEY"] = API_KEY()
-
 import sqlvalidator
 
 from langchain.chat_models import ChatOpenAI
 from langchain.prompts.chat import ChatPromptTemplate
 from langchain.schema import BaseOutputParser
-from langchain.chains import LLMChain
 from langchain.llms.openai import OpenAI
 
 from app.utils.table_description import get_target_table_description
 from app.utils.db_utils import TARGET_TABLE
 from app.utils.prompts import text2SQL_template, data_to_natural_language
+from app.config.fconfig import get_openai_apikey as API_KEY
+
+os.environ["OPENAI_API_KEY"] = API_KEY()
 
 model_chat = ChatOpenAI()
 

@@ -1,7 +1,4 @@
 import os
-
-os.getenv("OPENAI_API_KEY")
-
 from sqlalchemy import create_engine, MetaData
 from llama_index import LLMPredictor, ServiceContext, SQLDatabase, VectorStoreIndex
 from llama_index.indices.struct_store import SQLTableRetrieverQueryEngine
@@ -10,6 +7,8 @@ from llama_index.objects import SQLTableNodeMapping, ObjectIndex, SQLTableSchema
 from langchain.llms.openai import OpenAI
 
 from db_utils import MARIADB_URI, TARGET_TABLE
+
+os.getenv("OPENAI_API_KEY")
 
 engine = create_engine(MARIADB_URI)
 

@@ -78,7 +78,7 @@ def transform2SQL(user_id, question: str):
 llm = OpenAI()
 
 def data2Text_model(query: str, question: str, db_data_response: str):
-
+    ai_response = ''
     data_to_text_template = data_to_natural_language(user_question=question, db_query=query, data=db_data_response)    
     print("INTO GENERATE RESPONSE")
     print(data_to_text_template)
@@ -86,3 +86,6 @@ def data2Text_model(query: str, question: str, db_data_response: str):
 
     for chunk in llm.stream(data_to_text_template):
         print(chunk, end="", flush=True)
+        ai_response += chunk
+
+    return ai_response

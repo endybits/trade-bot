@@ -58,23 +58,23 @@ def tradeInterpreterAI(
     # 1. data to image 2. Data to natural language
     
     # elaborate response
-    data2Text_model(
+    ai_response = data2Text_model(
         query=sql_command,
         question=user_query.question,
         db_data_response=data_str
         )
 
-    make_chart(
+    chart_url = make_chart(
         user_question=user_query.question,
         sql_query=sql_command,
         db_data=data_str
     )
-
-    return {
-        'user_query': user_query,
-        'SQL': sql_command,
-        'DB_resp': db_response_list
+    response = {
+        'user_question': user_query.question,
+        'ai_answer': str(ai_response).strip(),
+        'chart_url': chart_url
     }
+    return JSONResponse(response, media_type="application/json")
 
 
 

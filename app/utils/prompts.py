@@ -63,6 +63,10 @@ path_folder = "app/../data_plots"
 file_path = os.path.join(path_folder, filename)
 plt.savefig(file_path)
 
+## file_dict was previously defined
+file_dict['filename'] = filename
+file_dict['path'] = path_folder
+
 # Show the path to the saved file
 print(f"Plot saved to: {file_path}")
 """
@@ -117,6 +121,10 @@ filename = f"plot_{current_datetime.strftime('%Y%m%d_%H%M%S')}.png"
 path_folder = "app/../data_plots"
 file_path = os.path.join(path_folder, filename)
 plt.savefig(file_path)
+
+## file_dict was previously defined
+file_dict['filename'] = filename
+file_dict['path'] = path_folder
 
 # Show the path to the saved file
 print(f"Plot saved to: {file_path}")
@@ -182,6 +190,10 @@ path_folder = "app/../data_plots"
 file_path = os.path.join(path_folder, filename)
 plt.savefig(file_path)
 
+## file_dict was previously defined
+file_dict['filename'] = filename
+file_dict['path'] = path_folder
+
 # Show the path to the saved file
 print(f"Plot saved to: {file_path}")
 """
@@ -246,6 +258,10 @@ path_folder = "app/../data_plots"
 file_path = os.path.join(path_folder, filename)
 plt.savefig(file_path)
 
+## file_dict was previously defined
+file_dict['filename'] = filename
+file_dict['path'] = path_folder
+
 # Show the path to the saved file
 print(f"Plot saved to: {file_path}")
 """
@@ -289,6 +305,11 @@ filename = f"plot_{current_datetime.strftime('%Y%m%d_%H%M%S')}.png"
 path_folder = "app/../data_plots"
 file_path = os.path.join(path_folder, filename)
 plt.savefig(file_path)
+
+## file_dict was previously defined
+file_dict['filename'] = filename
+file_dict['path'] = path_folder
+
 print(f"Plot saved to: {file_path}")
 """
 

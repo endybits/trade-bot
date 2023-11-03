@@ -2,11 +2,13 @@ from pydantic import BaseModel, Field
 from fastapi import FastAPI
 from fastapi import status
 from fastapi import Body
-from fastapi.responses import JSONResponse
+from fastapi import WebSocket, WebSocketException
+from fastapi.responses import JSONResponse, HTMLResponse
 
 from app.utils.langchain_labs import transform2SQL, data2Text_model
 from app.utils.db_tests import db_querier
 from app.utils.chart_gpt import make_chart
+from app.utils.html_response import html
 
 
 # Schema
@@ -25,7 +27,7 @@ app = FastAPI()
 
 @app.get("/")
 def hello_trader():
-    return {"msg": "Hello Trader"}
+    return HTMLResponse(html)
 
 
 @app.post("/query-ai", status_code=status.HTTP_200_OK)
@@ -56,3 +58,32 @@ def tradeInterpreterAI(user_query: UserQuery = Body(...)):
         "chart_url": chart_url,
     }
     return JSONResponse(response, media_type="application/json")
+
+import asyncio
+async def get_url(text):
+    await asyncio.sleep(5)
+    print(text)
+    return "http://fakeimageurl.co"
+
+@app.websocket('/ws1')
+async def websocket_endpoint1(
+    *,
+    websocket: WebSocket
+):
+    await websocket.accept()
+    while True:
+        data = await websocket.receive_text()
+        await websocket.send_text(f"""the answer to the question "{data}" is: This is the answer. """)
+        await websocket.send_text("The image_url is: ")
+
+
+@app.websocket('/ws')
+async def websocket_endpoint(
+    websocket: WebSocket
+):
+    await websocket.accept()
+    while True:
+        data = await websocket.receive_text()
+        await websocket.send_text(f"""the answer to the question "{data}" is: This is the answer. """)
+        url = await get_url("jajajja")
+        await websocket.send_text(url)

@@ -1,10 +1,16 @@
+## CONSTRAINTS OR RECOMMENDATIONS : 
+def get_constrains_or_conditions():
+    return f""" For each query you must to filtrate the results using the condition WHERE is_trade=1"""
+
+
 ## TEXT TO SQL TEMPLATE PROMPT
-def text2SQL_template(target_table, target_table_description_fields):
+def text2SQL_template(target_table, target_table_description_fields, contraints):
     # output_format = """{"sql_query": "SELECT...", "column_list": ["field1", "field2",]}"""
     return f"""You are a SQL expert assistant who generates SQL Query commands based on text.
                     A user will pass in a question and you should convert it in a SQL command 
                     to query against the table {target_table} in a MariaDB database.
                     Use this fields description of the table, for a more accurate results: {target_table_description_fields}
+                    Also, apply this constraint: {contraints}
                     ONLY return the SQL QUERY and nothing more."""
 
 

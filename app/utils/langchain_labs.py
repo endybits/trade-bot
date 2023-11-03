@@ -11,6 +11,7 @@ from langchain.llms.openai import OpenAI
 
 from app.utils.table_description import get_target_table_description
 from app.utils.db_utils import TARGET_TABLE
+from app.utils.prompts import get_constrains_or_conditions
 from app.utils.prompts import text2SQL_template, data_to_natural_language
 from app.config.fconfig import get_openai_apikey as API_KEY
 
@@ -34,10 +35,12 @@ class SQLCommandOutputParser(BaseOutputParser):
 
 # Get templates
 target_table_description_fields = get_target_table_description()
+contraints = get_constrains_or_conditions()
 
 base_template = text2SQL_template(
     target_table=TARGET_TABLE,
     target_table_description_fields=target_table_description_fields,
+    contraints=contraints
 )
 
 human_template = "{text}"

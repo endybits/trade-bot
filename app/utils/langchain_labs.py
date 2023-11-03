@@ -1,3 +1,4 @@
+import asyncio
 import os
 
 # import ast
@@ -56,7 +57,8 @@ chat_prompt = ChatPromptTemplate.from_messages(
 
 
 # LLM text2SQL
-def transform2SQL(user_id, question: str):
+async def transform2SQL(user_id, question: str):
+    await asyncio.sleep(0)
     chain = chat_prompt | ChatOpenAI() | SQLCommandOutputParser()
     chain.invoke({"text": f"I am the user_id {user_id}. {question}"})
 

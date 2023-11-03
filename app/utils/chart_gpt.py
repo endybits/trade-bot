@@ -1,3 +1,4 @@
+import asyncio
 import os
 
 import openai
@@ -26,12 +27,13 @@ def create_chart_base_code(prompt: str):
 
 
 ## TODO Dynamical data
-def make_chart(user_question: str, sql_query: str, db_data: str):
+async def make_chart(user_question: str, sql_query: str, db_data: str):
     file_dict = {
         "filename": None,
         "path": None,
     }  # This dict will be full in the AI-generated code.
     try:
+        await asyncio.sleep(0)
         few_shot_template = few_shot_code_to_chart_template(
             user_question, sql_query, db_data
         )

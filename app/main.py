@@ -1,3 +1,6 @@
+import asyncio
+import json
+
 from pydantic import BaseModel, Field
 from fastapi import FastAPI
 from fastapi import status
@@ -59,23 +62,6 @@ def tradeInterpreterAI(user_query: UserQuery = Body(...)):
     }
     return JSONResponse(response, media_type="application/json")
 
-import asyncio
-async def get_url(text):
-    await asyncio.sleep(5)
-    print(text)
-    return "http://fakeimageurl.co"
-
-@app.websocket('/ws1')
-async def websocket_endpoint1(
-    *,
-    websocket: WebSocket
-):
-    await websocket.accept()
-    while True:
-        data = await websocket.receive_text()
-        await websocket.send_text(f"""the answer to the question "{data}" is: This is the answer. """)
-        await websocket.send_text("The image_url is: ")
-
 
 @app.websocket('/ws')
 async def websocket_endpoint(
@@ -83,7 +69,26 @@ async def websocket_endpoint(
 ):
     await websocket.accept()
     while True:
-        data = await websocket.receive_text()
-        await websocket.send_text(f"""the answer to the question "{data}" is: This is the answer. """)
-        url = await get_url("jajajja")
-        await websocket.send_text(url)
+        #data = await websocket.receive_text()
+        user_query = await websocket.receive_json(mode="text")
+        question_obj = json.loads(user_query)
+        question = question_obj.get("question")
+        user_id = question_obj.get("user_id")
+        await websocket.send_text(f"""{question}""")
+        
+        # GET SQL COMMAND
+        sql_query = await transform2SQL(user_id, question)
+        
+        # exec query agaist bd table
+        db_response_list = db_querier(sql_query)
+        data_str = "\n".join(["".join(str(col)) for col in db_response_list])
+        
+        # Data to text
+        ai_response = data2Text_model(
+            query=sql_query, question=question, db_data_response=data_str
+        )
+        await websocket.send_text(f"""{ai_response}""")
+
+        # Get Chart URL
+        url = await make_chart(user_question=question, sql_query=sql_query, db_data=data_str)
+        await websocket.send_text(f"""{url}""")

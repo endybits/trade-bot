@@ -75,6 +75,7 @@ async def websocket_endpoint(
         question = question_obj.get("question")
         user_id = question_obj.get("user_id")
         await websocket.send_text(f"""{question}""")
+        await websocket.send_text(f"""loading""")
         
         # GET SQL COMMAND
         sql_query = await transform2SQL(user_id, question)
@@ -88,7 +89,7 @@ async def websocket_endpoint(
             query=sql_query, question=question, db_data_response=data_str
         )
         await websocket.send_text(f"""{ai_response}""")
-
+        await websocket.send_text(f"""loading""")
         # Get Chart URL
         url = await make_chart(user_question=question, sql_query=sql_query, db_data=data_str)
         await websocket.send_text(f"""{url}""")

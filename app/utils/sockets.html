@@ -50,6 +50,63 @@
 		padding: 10px;
 		border-radius: 5px;
 	}
+	.loading-box {
+		height: 10vh;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		/* background: FFF; */
+	}
+	.wave {
+		width: 2px;
+		height: 30px;
+		background: linear-gradient(45deg, #4db6ac, cyan);
+		margin: 5px;
+		animation: wave 1s linear infinite;
+		border-radius: 20px;
+	}
+	.wave:nth-child(2) {
+		animation-delay: 0.1s;
+	}
+	.wave:nth-child(3) {
+		animation-delay: 0.2s;
+	}
+	.wave:nth-child(3) {
+		animation-delay: 0.2s;
+	}
+	.wave:nth-child(4) {
+		animation-delay: 0.3s;
+	}
+	.wave:nth-child(5) {
+		animation-delay: 0.4s;
+	}
+	.wave:nth-child(6) {
+		animation-delay: 0.5s;
+	}
+	.wave:nth-child(7) {
+		animation-delay: 0.6s;
+	}
+	.wave:nth-child(8) {
+		animation-delay: 0.7s;
+	}
+	.wave:nth-child(9) {
+		animation-delay: 0.8s;
+	}
+	.wave:nth-child(10) {
+		animation-delay: 0.9s;
+	}
+	@keyframes wave {
+		0% {
+			transform: scale(0);
+		}
+		50% {
+			transform: scale(1);
+		}
+		100% {
+			transform: scale(0);
+		}
+	}
+
 	img {
 		width:700px;
 	}
@@ -92,6 +149,20 @@
 		<div id="message-container">
 			<ul id="message-list">
 				<!-- List items will be added here by JavaScript -->
+				<!-- <li>
+					<div class="loading-box">
+						<div class="wave"></div>
+						<div class="wave"></div>
+						<div class="wave"></div>
+						<div class="wave"></div>
+						<div class="wave"></div>
+						<div class="wave"></div>
+						<div class="wave"></div>
+						<div class="wave"></div>
+						<div class="wave"></div>
+						<div class="wave"></div>
+					</div>
+				</li> -->
 			</ul>
 		</div>
 		<div id="input-container">
@@ -103,29 +174,59 @@
 	</div>
 
 	<script>
+		// Loading Animation
+		function waitingMessage() {
+			console.log("Waiting...");
+			let messages = document.getElementById("message-list")
+			let loadingMessage = document.createElement('li')
+			loadingMessage.setAttribute('id', 'loading-item')
+			let loadingBox = document.createElement('div')
+			loadingBox.setAttribute('class', 'loading-box')
+			for (let i = 0; i < 10; i++) {
+				let wave = document.createElement('div')
+				wave.setAttribute('class', 'wave')
+				loadingBox.appendChild(wave);
+			}
+			loadingMessage.appendChild(loadingBox)
+			messages.appendChild(loadingMessage)
+		}
+		function destroyItem(item){
+			let messages = document.getElementById("message-list")
+			messages.removeChild(item)
+			// console.log('Item removed successfully!')
+		}
+
 		// WebSocket Connection and handler
 		let ws = new WebSocket("ws://localhost:8000/ws");
 		ws.onmessage = function(event) {
 			let messages = document.getElementById("message-list")
 			let message = document.createElement('li')
-			url_content_validator = event.data.trim();
+			response_value = event.data.trim();
             // Regular expression pattern for matching URLs
-            var urlPattern = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
-			if (!urlPattern.test(url_content_validator)) {
-                console.log("Not URL");
-                var content = document.createTextNode(event.data)
-                message.appendChild(content)
-                messages.appendChild(message)
-			}
-			else {
-				console.log("Valid URL");
-                var img = document.createElement('img')
-                img.src = url_content_validator
-                message.appendChild(img)
-                messages.appendChild(message)
+            let urlPattern = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
+			
+			if (response_value == 'loading') {
+				waitingMessage();
+			}else {
+				console.log("Message received");
+				item = document.getElementById('loading-item')
+				if (item) {
+					destroyItem(item)
+				}
+				if (!urlPattern.test(response_value)) {
+					let content = document.createTextNode(event.data)
+					message.appendChild(content)
+					messages.appendChild(message)
+				}
+				else {
+					console.log("Valid URL");
+					let img = document.createElement('img')
+					img.src = response_value
+					message.appendChild(img)
+					messages.appendChild(message)
+				}
 			}
 		}
-
 
     	// JavaScript code to handle the form submission
 		document.getElementById('message-form').addEventListener('submit', function(event) {
@@ -133,22 +234,14 @@
 			const messageInput = document.getElementById('message-input');
 			const messageText = messageInput.value.trim();
 			if (messageText) {
-				var user_id = "4359"
+				let user_id = "4359"
 				let json_input = '{"user_id": "' + user_id + '",' +
 				'"question": "' + messageText + '"}';
 				question_obj = JSON.stringify(json_input)
-				console.log(json_input);
-				console.log(question_obj);
 				ws.send(question_obj)
 				messageInput.value = ''
 			}
 		});
-		// const messageList = document.getElementById('message-list');
-    	// for (let i = 0; i < 10; i++) { // Generates 1000 list items
-		// 	const li = document.createElement('li');
-		// 	li.textContent = `Message ${i + 1}`;
-		// 	messageList.appendChild(li);
-		// }
 	</script>
 </body>
 </html>

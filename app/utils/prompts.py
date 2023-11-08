@@ -333,14 +333,6 @@ Put the chosen x in a "x_variable" and  y in a "y_variable"
 Put Hue class in a "hue_variable"
 Put numerical values for x and y, and categorical value in hue.
 Give an appropriate title. Put the title in a "title"
-This is your resultant dict template, use it as base for feed the python code:
-{
-    "chart_type": "",
-    "x_variable": "",
-    "y_variable": "",
-    "hue_variable": "",
-    "title": ""
-}
 Remember, you must only return the python code to visualize the chart.
 """
 
